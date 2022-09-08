@@ -2,7 +2,7 @@
 
 Project to learn react.
 
-## mockoon
+## Mockoon Server
 This server will help you in your development.
 
 1. Install mockoon
