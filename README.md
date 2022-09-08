@@ -2,7 +2,8 @@
 
 Project to learn react.
 
-## Run mockoon
+## mockoon
+This server will help you in your development.
 
 1. Install mockoon
 ```bash
