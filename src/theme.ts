@@ -1,4 +1,5 @@
 import { red } from '@mui/material/colors'
+import { ptBR } from '@mui/material/locale'
 import { createTheme } from '@mui/material/styles'
 
 // A custom theme for this app
@@ -22,6 +23,6 @@ const theme = createTheme({
     },
     divider: '#BDBDBD'
   }
-})
+}, ptBR)
 
 export default theme

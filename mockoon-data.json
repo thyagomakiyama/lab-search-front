@@ -15,7 +15,7 @@
       "responses": [
         {
           "uuid": "ca11b54e-bf01-4999-bf40-9c792763c72e",
-          "body": "{\n  \"items\": [\n    {{# repeat (queryParam 'limit' '10') }}\n      {\n        \"id\": \"{{ faker 'datatype.uuid' }}\",\n        \"name\": \"{{ faker 'name.firstName' }}\",\n        \"description\": \"{{ faker 'lorem.sentence' }}\",\n        \"price\": \"{{ faker 'commerce.price' 0 10000 R$ }}\"\n      },\n    {{/ repeat }}\n  ]\n}",
+          "body": "[\n  {{# repeat (queryParam 'limit' '10') }}\n    {\n      \"id\": \"{{ faker 'datatype.uuid' }}\",\n      \"name\": \"{{ faker 'name.firstName' }}\",\n      \"description\": \"{{ faker 'lorem.sentence' }}\",\n      \"price\": \"{{ faker 'commerce.price' 0 10000 R$ }}\",\n      \"brand\": \"{{ faker 'name.lastName' }}\",\n      \"model\": \"{{ faker 'commerce.productName' }}\",\n      \"store\": \"{{ faker 'company.companyName' }}\"\n    },\n  {{/ repeat }}\n]\n",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -27,6 +27,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true
+        },
+        {
+          "uuid": "d82222ac-476c-4cd8-b50d-41e5984a66a8",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -50,6 +65,18 @@
     {
       "key": "Content-Type",
       "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
     }
   ],
   "proxyReqHeaders": [
