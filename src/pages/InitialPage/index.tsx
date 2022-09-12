@@ -5,9 +5,9 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import NavBar from '../../components/NavBar'
 import IItem from '../../clients/IItem'
 import axios, { AxiosError } from 'axios'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GRID_PORTUGUES_TRANSLATOR } from '../../translators/GridPortugueseTranslator'
-import './index.css'
+import ExpandableCell from '../../components/ExpandableCell'
 
 const InitialPage = (): JSX.Element => {
   const [searchForm, setSearchForm] = useState({
@@ -34,7 +34,7 @@ const InitialPage = (): JSX.Element => {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', width: 150 },
-    { field: 'description', headerName: 'Descrição', width: 400 },
+    { field: 'description', headerName: 'Descrição', width: 400, renderCell: (params: GridRenderCellParams) => <ExpandableCell {...params} /> },
     { field: 'price', headerName: 'Preço', width: 90 },
     { field: 'brand', headerName: 'Marca', width: 150 },
     { field: 'model', headerName: 'Modelo', width: 150 },
@@ -96,15 +96,19 @@ const InitialPage = (): JSX.Element => {
             density='comfortable'
             columns={columns}
             rows={items}
-            rowHeight={120}
-            checkboxSelection
             autoPageSize
-            rowsPerPageOptions={[3, 5, 10, 15]}
+            rowsPerPageOptions={[5, 10, 15]}
             localeText={GRID_PORTUGUES_TRANSLATOR}
+            getRowHeight={() => 'auto'}
+            // getEstimatedRowHeight={() => 50}
+            rowHeight={70}
             sx={{
               '& .MuiDataGrid-row:hover': {
                 color: 'secondary.main'
-              }
+              },
+              '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+              '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' }
             }}
           />
         </Box>
