@@ -15,7 +15,7 @@
       "responses": [
         {
           "uuid": "ca11b54e-bf01-4999-bf40-9c792763c72e",
-          "body": "[\n  {{# repeat (queryParam 'limit' '10') }}\n    {\n      \"id\": \"{{ faker 'datatype.uuid' }}\",\n      \"name\": \"{{ faker 'name.firstName' }}\",\n      \"description\": \"{{ faker 'lorem.sentence' }}\",\n      \"price\": \"{{ faker 'commerce.price' 0 10000 R$ }}\",\n      \"brand\": \"{{ faker 'name.lastName' }}\",\n      \"model\": \"{{ faker 'commerce.productName' }}\",\n      \"store\": \"{{ faker 'company.companyName' }}\"\n    },\n  {{/ repeat }}\n]\n",
+          "body": "[\n  {{# repeat (queryParam 'limit' '10') }}\n    {\n      \"id\": \"{{ faker 'datatype.uuid' }}\",\n      \"name\": \"{{ faker 'name.firstName' }}\",\n      \"description\": \"{{ faker 'lorem.paragraph' }}\",\n      \"price\": \"{{ faker 'commerce.price' 0 10000 R$ }}\",\n      \"brand\": \"{{ faker 'name.lastName' }}\",\n      \"model\": \"{{ faker 'commerce.productName' }}\",\n      \"store\": \"{{ faker 'company.companyName' }}\"\n    },\n  {{/ repeat }}\n]\n",
           "latency": 0,
           "statusCode": 200,
           "label": "",
