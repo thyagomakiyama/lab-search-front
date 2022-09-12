@@ -20,8 +20,11 @@ root.render(
     <CssBaseline />
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<Login />}></Route>
-        <Route path='/home' element={<InitialPage />}></Route>
+        <Route path='/login' element={<Login />}>
+          <Route index element={<InitialPage />} />
+        </Route>
+        <Route path='/home' element={<InitialPage />} />
+        <Route index element={<InitialPage />} />
         <Route path='*' element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
