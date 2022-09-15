@@ -46,6 +46,31 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "4e472d43-f82e-40cd-b8ae-935cd9983aad",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "login",
+      "responses": [
+        {
+          "uuid": "4e645c14-7cf2-44e0-afcd-a5c81098428a",
+          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Thyago Makiyama\",\n    \"email\": \"thyago.makiyama@gmail.com\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "proxyMode": false,

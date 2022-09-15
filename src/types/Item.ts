@@ -1,4 +1,4 @@
-interface IItem {
+interface Item {
   id: string
   name: string
   description: string
@@ -8,4 +8,4 @@ interface IItem {
   store: string
 }
 
-export default IItem
+export default Item

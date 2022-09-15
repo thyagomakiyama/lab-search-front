@@ -3,7 +3,7 @@
 import { Link } from '@mui/material'
 import { Box } from '@mui/system'
 import { GridRenderCellParams } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const ExpandableCell = ({ value }: GridRenderCellParams): JSX.Element => {
   const [expanded, setExpanded] = useState(false)

@@ -1,20 +1,20 @@
 import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Container } from '@mui/system'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import NavBar from '../../components/NavBar'
-import IItem from '../../clients/IItem'
+import Item from '../../types/Item'
 import axios, { AxiosError } from 'axios'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GRID_PORTUGUES_TRANSLATOR } from '../../translators/GridPortugueseTranslator'
 import ExpandableCell from '../../components/ExpandableCell'
 
-const InitialPage = (): JSX.Element => {
+const Home = (): JSX.Element => {
   const [searchForm, setSearchForm] = useState({
     search: '',
     brand: ''
   })
-  const [items, setItems] = useState<IItem[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [error, setError] = useState('')
   const [openErrorAlert, setOpenErrorAlert] = useState(true)
 
@@ -53,7 +53,7 @@ const InitialPage = (): JSX.Element => {
     }
 
     axios
-      .get<IItem[]>(url)
+      .get<Item[]>(url)
       .then(response => {
         setItems(response.data)
         setError('')
@@ -67,7 +67,7 @@ const InitialPage = (): JSX.Element => {
   }
 
   return (
-    <Box sx={{ height: '100vh' }}>
+    <Box sx={{ height: '100vh', width: '100vw' }}>
       <NavBar />
       <Container maxWidth="lg">
         <Box component="form" noValidate onSubmit={handleSubmit}>
@@ -124,4 +124,4 @@ const InitialPage = (): JSX.Element => {
   )
 }
 
-export default InitialPage
+export default Home
