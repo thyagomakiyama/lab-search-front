@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, TextField, Typography } from '@mui/material'
+import { Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
@@ -9,23 +9,28 @@ const Login = (): JSX.Element => {
   const navigate = useNavigate()
   const [user, setUser] = useState('')
   const [password, setPassword] = useState('')
+  const [openErrorAlert, setOpenErrorAlert] = useState(true)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
 
-    if ((user.length === 0) || (password.length === 0)) {
-      alert('user or password is empty')
-    }
-
     const isLogged = await auth.signin(user, password)
-
-    isLogged ? navigate('/') : alert('ops')
+    if (isLogged) {
+      setOpenErrorAlert(false)
+      navigate('/')
+    } else {
+      setPassword('')
+      setOpenErrorAlert(true)
+    }
   }
 
   return (
     <Box sx={{ height: '100vh', width: '100vw' }}>
       <Container component='main' maxWidth='xs'>
         <Box
+          component='form'
+          onSubmit={handleSubmit}
+          autoComplete='off'
           sx={{
             marginTop: 8,
             display: 'flex',
@@ -39,19 +44,23 @@ const Login = (): JSX.Element => {
           <Typography component='h1' variant='h5'>
             Search System
           </Typography>
-          <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1 }}>
             <TextField
+              error={auth.signError !== null}
+              value={user}
+              focused={auth.signError !== null}
               margin='normal'
               required
               fullWidth
               id='user'
               label='usuário'
               name='user'
-              autoComplete='user'
               autoFocus
               onChange={e => setUser(e.target.value)}
             />
             <TextField
+              error={auth.signError !== null}
+              value={password}
               margin='normal'
               required
               fullWidth
@@ -59,7 +68,6 @@ const Login = (): JSX.Element => {
               label='senha'
               type='password'
               id='password'
-              autoComplete='current-password'
               onChange={e => setPassword(e.target.value)}
             />
             <Button
@@ -73,6 +81,13 @@ const Login = (): JSX.Element => {
           </Box>
         </Box>
       </Container>
+      {auth.signError !== null && (
+        <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={() => setOpenErrorAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <Alert onClose={() => setOpenErrorAlert(false)} severity="error" sx={{ width: '100%' }}>
+            {auth.signError}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   )
 }

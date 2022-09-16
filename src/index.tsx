@@ -1,11 +1,8 @@
 import { ThemeProvider } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import NotFound from './pages/NotFound'
 import reportWebVitals from './reportWebVitals'
 import theme from './theme'
 import '@fontsource/roboto/300.css'
@@ -13,7 +10,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { AuthProvider } from './contexts/Auth/AuthProvider'
-import RequireAuth from './contexts/Auth/RequireAuth'
+import App from './App'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -21,11 +18,7 @@ root.render(
     <CssBaseline />
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route index element={<RequireAuth><Home /></RequireAuth>} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
+        <App />
       </BrowserRouter>
     </AuthProvider>
   </ThemeProvider>

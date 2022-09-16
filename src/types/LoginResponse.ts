@@ -1,8 +1,8 @@
 import User from './User'
 
 interface LoginResponse {
-  user: User | null
-  token: string | null
+  user: User
+  token: string
 }
 
 export default LoginResponse

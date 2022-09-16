@@ -4,12 +4,14 @@ import { Box, Container } from '@mui/system'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import NavBar from '../../components/NavBar'
 import Item from '../../types/Item'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GRID_PORTUGUES_TRANSLATOR } from '../../translators/GridPortugueseTranslator'
 import ExpandableCell from '../../components/ExpandableCell'
+import { useApi } from '../../hooks/useApi'
 
 const Home = (): JSX.Element => {
+  const api = useApi()
   const [searchForm, setSearchForm] = useState({
     search: '',
     brand: ''
@@ -44,18 +46,9 @@ const Home = (): JSX.Element => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
 
-    let url = 'http://localhost:8081/items?limit=50'
-    if (searchForm.brand !== '') {
-      url = url + '&brand=' + searchForm.brand
-    }
-    if (searchForm.search !== '') {
-      url = url + '&search=' + searchForm.search
-    }
-
-    axios
-      .get<Item[]>(url)
+    api.getItems(searchForm.brand, searchForm.search)
       .then(response => {
-        setItems(response.data)
+        setItems(response)
         setError('')
         setOpenErrorAlert(false)
       })

@@ -26,13 +26,83 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": false
         },
         {
           "uuid": "d82222ac-476c-4cd8-b50d-41e5984a66a8",
           "body": "{}",
           "latency": 0,
           "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "4e472d43-f82e-40cd-b8ae-935cd9983aad",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "login",
+      "responses": [
+        {
+          "uuid": "4e645c14-7cf2-44e0-afcd-a5c81098428a",
+          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Thyago Makiyama\",\n    \"email\": \"thyago.makiyama@gmail.com\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "aa70cf1b-b6e2-47fb-a3c4-ce3939e943f6",
+          "body": "{\n  \"message\": \"User or password is invalid\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "93035ba8-f483-41f0-8a2c-0334f38963f4",
+          "body": "{\n  \"message\": \"Bad request\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "2428e5bd-520a-4f0e-8ab1-0717fb044902",
+          "body": "{\n  \"message\": \"Internal server error\"\n}",
+          "latency": 0,
+          "statusCode": 500,
           "label": "",
           "headers": [],
           "filePath": "",
@@ -48,14 +118,54 @@
       "responseMode": null
     },
     {
-      "uuid": "4e472d43-f82e-40cd-b8ae-935cd9983aad",
+      "uuid": "0a291bb6-ad99-4d51-a70c-1d86645f8788",
       "documentation": "",
       "method": "post",
-      "endpoint": "login",
+      "endpoint": "validate-token",
       "responses": [
         {
-          "uuid": "4e645c14-7cf2-44e0-afcd-a5c81098428a",
+          "uuid": "57d3e004-c05a-4eb2-b28d-6aa5f534cb69",
           "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Thyago Makiyama\",\n    \"email\": \"thyago.makiyama@gmail.com\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "9fbbabf8-5f3f-40fa-b8a8-4b9eddc066e7",
+          "body": "{\n  \"message\": \"You have make login again\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "09b3ce69-9ae5-4462-81f3-4122118b4ac1",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "logout",
+      "responses": [
+        {
+          "uuid": "7f11b592-fee4-4bf0-871b-4550deed2b12",
+          "body": "{}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
