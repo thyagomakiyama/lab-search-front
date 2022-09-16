@@ -5,7 +5,7 @@
   "endpointPrefix": "",
   "latency": 0,
   "port": 8081,
-  "hostname": "0.0.0.0",
+  "hostname": "localhost",
   "routes": [
     {
       "uuid": "789ea97c-be14-4a2e-9dc9-26b57ce434ee",
@@ -26,7 +26,7 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": true
         },
         {
           "uuid": "d82222ac-476c-4cd8-b50d-41e5984a66a8",
@@ -41,7 +41,7 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": false
         }
       ],
       "enabled": true,
@@ -55,7 +55,7 @@
       "responses": [
         {
           "uuid": "4e645c14-7cf2-44e0-afcd-a5c81098428a",
-          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Thyago Makiyama\",\n    \"email\": \"thyago.makiyama@gmail.com\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
+          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}\",\n    \"email\": \"{{ faker 'internet.email' }}\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -125,7 +125,7 @@
       "responses": [
         {
           "uuid": "57d3e004-c05a-4eb2-b28d-6aa5f534cb69",
-          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Thyago Makiyama\",\n    \"email\": \"thyago.makiyama@gmail.com\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
+          "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}\",\n    \"email\": \"{{ faker 'internet.email' }}\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

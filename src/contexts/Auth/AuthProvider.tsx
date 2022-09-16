@@ -1,13 +1,10 @@
-import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { useApi } from '../../hooks/useApi'
-import ResponseError from '../../types/ResponseError'
 import User from '../../types/User'
 import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
-  const [signError, setSignError] = useState<string | null>(null)
   const api = useApi()
   const AUTH_TOKEN_KEY = 'authToken'
 
@@ -28,23 +25,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
   }, [api])
 
   const signin = async (email: string, password: string): Promise<boolean> => {
-    await api.signin(email, password).then(response => {
-      setUser(response.user)
-      setToken(response.token)
-      setSignError(null)
-    }).catch((error: AxiosError<ResponseError>) => {
-      handleErrorSignin(error.response?.data.message ?? 'Error to request login')
-    }).catch((error: Error) => {
-      handleErrorSignin(error.message)
-    })
+    const data = await api.signin(email, password)
 
-    return user !== null && signError == null
-  }
+    if (data.user !== null && data.token !== null) {
+      setUser(data.user)
+      setToken(data.token)
+      return true
+    }
 
-  const handleErrorSignin = (errorMessage: string): void => {
-    setUser(null)
-    removeToken()
-    setSignError(errorMessage)
+    return false
   }
 
   const logout = async (token: string): Promise<void> => {
@@ -63,7 +52,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
   }
 
   return (
-    <AuthContext.Provider value={{ user, signError, signin, logout }}>
+    <AuthContext.Provider value={{ user, signin, logout }}>
       {children}
     </AuthContext.Provider>
   )

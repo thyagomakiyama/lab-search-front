@@ -3,7 +3,6 @@ import User from '../../types/User'
 
 export interface AuthContextType {
   user: User | null
-  signError: string | null
   signin: (email: string, password: string) => Promise<boolean>
   logout: (token: string) => Promise<void>
 }

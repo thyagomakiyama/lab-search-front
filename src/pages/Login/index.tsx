@@ -3,6 +3,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { AxiosError } from 'axios'
+import ResponseError from '../../types/ResponseError'
 
 const Login = (): JSX.Element => {
   const auth = useContext(AuthContext)
@@ -10,18 +12,26 @@ const Login = (): JSX.Element => {
   const [user, setUser] = useState('')
   const [password, setPassword] = useState('')
   const [openErrorAlert, setOpenErrorAlert] = useState(true)
+  const [loginError, setLoginError] = useState('')
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
 
-    const isLogged = await auth.signin(user, password)
-    if (isLogged) {
-      setOpenErrorAlert(false)
-      navigate('/')
-    } else {
-      setPassword('')
-      setOpenErrorAlert(true)
-    }
+    await auth.signin(user, password)
+      .then(() => {
+        setOpenErrorAlert(false)
+        navigate('/')
+      }).catch((error: AxiosError<ResponseError>) => {
+        handleErrorLogin(error.response?.data.message ?? 'Error to request login')
+      }).catch((error: Error) => {
+        handleErrorLogin(error.message)
+      })
+  }
+
+  const handleErrorLogin = (errorMessage: string): void => {
+    setPassword('')
+    setOpenErrorAlert(true)
+    setLoginError(errorMessage)
   }
 
   return (
@@ -46,9 +56,9 @@ const Login = (): JSX.Element => {
           </Typography>
           <Box sx={{ mt: 1 }}>
             <TextField
-              error={auth.signError !== null}
+              error={loginError !== ''}
               value={user}
-              focused={auth.signError !== null}
+              focused={loginError !== ''}
               margin='normal'
               required
               fullWidth
@@ -59,7 +69,7 @@ const Login = (): JSX.Element => {
               onChange={e => setUser(e.target.value)}
             />
             <TextField
-              error={auth.signError !== null}
+              error={loginError !== ''}
               value={password}
               margin='normal'
               required
@@ -81,10 +91,10 @@ const Login = (): JSX.Element => {
           </Box>
         </Box>
       </Container>
-      {auth.signError !== null && (
+      {loginError !== '' && (
         <Snackbar open={openErrorAlert} autoHideDuration={6000} onClose={() => setOpenErrorAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
           <Alert onClose={() => setOpenErrorAlert(false)} severity="error" sx={{ width: '100%' }}>
-            {auth.signError}
+            {loginError}
           </Alert>
         </Snackbar>
       )}
