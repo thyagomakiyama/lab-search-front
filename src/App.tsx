@@ -9,7 +9,6 @@ const App = (): JSX.Element => {
     <Routes>
       <Route path='/login' element={<Login />} />
       <Route index element={<RequireAuth><Home /></RequireAuth>} />
-      {/* <Route index element={<Home />} /> */}
       <Route path='*' element={<Error message='Page not found' />} />
     </Routes>
   )

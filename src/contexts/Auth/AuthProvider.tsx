@@ -2,28 +2,29 @@ import { useEffect, useState } from 'react'
 import { useApi } from '../../hooks/useApi'
 import User from '../../types/User'
 import { AuthContext } from './AuthContext'
+import { AUTH } from './Constants'
 
 export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
-  const AUTH_TOKEN_KEY = 'authToken'
   const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_KEY))
+  const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH.LOCAL_STORAGE_TOKEN_KEY))
   const api = useApi()
 
   useEffect(() => {
-    const validateToken = async (): Promise<void> => {
-      const storageDataAuthToken = localStorage.getItem(AUTH_TOKEN_KEY)
-      if (storageDataAuthToken !== null) {
-        try {
-          const data = await api.validateToken(storageDataAuthToken)
-          if (data.user !== null) {
-            setUser(data.user)
-          }
-        } catch (error) { }
-      }
-    }
-
     validateToken()
   }, [])
+
+  const validateToken = async (): Promise<void> => {
+    const storageDataAuthToken = localStorage.getItem(AUTH.LOCAL_STORAGE_TOKEN_KEY)
+    if (storageDataAuthToken !== null) {
+      await api.validateToken(storageDataAuthToken)
+        .then(response => {
+          if (response.user !== null) {
+            setUser(response.user)
+          }
+        })
+        .catch(() => removeToken())
+    }
+  }
 
   const signin = async (email: string, password: string): Promise<boolean> => {
     const data = await api.signin(email, password)
@@ -47,11 +48,11 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
 
   const handleToken = (token: string): void => {
     setToken(token)
-    localStorage.setItem(AUTH_TOKEN_KEY, token)
+    localStorage.setItem(AUTH.LOCAL_STORAGE_TOKEN_KEY, token)
   }
 
   const removeToken = (): void => {
-    localStorage.removeItem(AUTH_TOKEN_KEY)
+    localStorage.removeItem(AUTH.LOCAL_STORAGE_TOKEN_KEY)
   }
 
   return (
