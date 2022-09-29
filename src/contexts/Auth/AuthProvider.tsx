@@ -4,13 +4,14 @@ import User from '../../types/User'
 import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null)
-  const api = useApi()
   const AUTH_TOKEN_KEY = 'authToken'
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_KEY))
+  const api = useApi()
 
   useEffect(() => {
     const validateToken = async (): Promise<void> => {
-      const storageDataAuthToken = localStorage.getItem('authToken')
+      const storageDataAuthToken = localStorage.getItem(AUTH_TOKEN_KEY)
       if (storageDataAuthToken !== null) {
         try {
           const data = await api.validateToken(storageDataAuthToken)
@@ -22,14 +23,14 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
     }
 
     validateToken()
-  }, [api])
+  }, [])
 
   const signin = async (email: string, password: string): Promise<boolean> => {
     const data = await api.signin(email, password)
 
     if (data.user !== null && data.token !== null) {
       setUser(data.user)
-      setToken(data.token)
+      handleToken(data.token)
       return true
     }
 
@@ -37,13 +38,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
   }
 
   const logout = async (token: string): Promise<void> => {
-    await api.logout(token).finally(() => {
-      removeToken()
-      setUser(null)
-    })
+    removeToken()
+    setUser(null)
+    if (token === '') {
+      await api.logout(token)
+    }
   }
 
-  const setToken = (token: string): void => {
+  const handleToken = (token: string): void => {
+    setToken(token)
     localStorage.setItem(AUTH_TOKEN_KEY, token)
   }
 
@@ -52,7 +55,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
   }
 
   return (
-    <AuthContext.Provider value={{ user, signin, logout }}>
+    <AuthContext.Provider value={{ user, token, signin, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import RequireAuth from './contexts/Auth/RequireAuth'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import NotFound from './pages/NotFound'
+import Error from './pages/Error'
 
 const App = (): JSX.Element => {
   return (
@@ -10,7 +10,7 @@ const App = (): JSX.Element => {
       <Route path='/login' element={<Login />} />
       <Route index element={<RequireAuth><Home /></RequireAuth>} />
       {/* <Route index element={<Home />} /> */}
-      <Route path='*' element={<NotFound />} />
+      <Route path='*' element={<Error message='Page not found' />} />
     </Routes>
   )
 }

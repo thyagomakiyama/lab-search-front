@@ -1,7 +1,7 @@
 import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Container } from '@mui/system'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import NavBar from '../../components/NavBar'
 import Item from '../../types/Item'
 import { AxiosError } from 'axios'
@@ -9,8 +9,12 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GRID_PORTUGUES_TRANSLATOR } from '../../translators/GridPortugueseTranslator'
 import ExpandableCell from '../../components/ExpandableCell'
 import { useApi } from '../../hooks/useApi'
+import { AuthContext } from '../../contexts/Auth/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = (): JSX.Element => {
+  const auth = useContext(AuthContext)
+  const navigate = useNavigate()
   const api = useApi()
   const [searchForm, setSearchForm] = useState({
     search: '',
@@ -59,9 +63,16 @@ const Home = (): JSX.Element => {
       })
   }
 
+  const handleLogout = async (): Promise<void> => {
+    await auth.logout(auth.token ?? '')
+      .then(() => {
+        navigate('/')
+      })
+  }
+
   return (
     <Box sx={{ height: '100vh', width: '100vw' }}>
-      <NavBar />
+      <NavBar userName={auth.user?.name ?? ''} logout={handleLogout} />
       <Container maxWidth="lg">
         <Box component="form" noValidate onSubmit={handleSubmit}>
           <Grid container spacing={1}>

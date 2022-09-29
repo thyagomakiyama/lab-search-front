@@ -1,12 +1,16 @@
 import { Typography } from '@mui/material'
 import { Box } from '@mui/system'
 
-const NotFound = (): JSX.Element => {
+interface ErrorPageTypes {
+  message: string
+}
+
+const Error = ({ message }: ErrorPageTypes): JSX.Element => {
   return (
     <Box sx={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Typography variant='h3' gutterBottom>Page not found</Typography>
+      <Typography variant='h3' gutterBottom>{message}</Typography>
     </Box>
   )
 }
 
-export default NotFound
+export default Error
