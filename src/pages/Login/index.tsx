@@ -1,4 +1,4 @@
-import { Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography } from '@mui/material'
+import { Alert, Avatar, Box, Button, CircularProgress, Container, Snackbar, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
@@ -13,9 +13,11 @@ const Login = (): JSX.Element => {
   const [password, setPassword] = useState('')
   const [openErrorAlert, setOpenErrorAlert] = useState(true)
   const [loginError, setLoginError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
+    setLoading(true)
 
     await auth.signin(user, password)
       .then(() => {
@@ -26,6 +28,8 @@ const Login = (): JSX.Element => {
       }).catch((error: Error) => {
         handleErrorLogin(error.message)
       })
+
+    setLoading(false)
   }
 
   const handleErrorLogin = (errorMessage: string): void => {
@@ -85,8 +89,9 @@ const Login = (): JSX.Element => {
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              Sign In
+              {loading ? <CircularProgress size={23} /> : 'Sign In'}
             </Button>
           </Box>
         </Box>

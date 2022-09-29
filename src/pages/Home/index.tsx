@@ -1,4 +1,4 @@
-import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar, TextField } from '@mui/material'
+import { Alert, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Container } from '@mui/system'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
@@ -23,6 +23,7 @@ const Home = (): JSX.Element => {
   const [items, setItems] = useState<Item[]>([])
   const [error, setError] = useState('')
   const [openErrorAlert, setOpenErrorAlert] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const handleSelectBrand = (event: SelectChangeEvent): void => {
     setSearchForm({
@@ -47,10 +48,11 @@ const Home = (): JSX.Element => {
     { field: 'store', headerName: 'Loja', width: 150 }
   ]
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
+    setLoading(true)
 
-    api.getItems(searchForm.brand, searchForm.search)
+    await api.getItems(searchForm.brand, searchForm.search)
       .then(response => {
         setItems(response)
         setError('')
@@ -61,6 +63,8 @@ const Home = (): JSX.Element => {
         setOpenErrorAlert(true)
         setItems([])
       })
+
+    setLoading(false)
   }
 
   const handleLogout = async (): Promise<void> => {
@@ -91,7 +95,15 @@ const Home = (): JSX.Element => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={2}>
-              <Button variant='contained' color='secondary' fullWidth sx={{ height: '99%' }} startIcon={<SearchIcon />} type="submit">Pesquisar</Button>
+              <Button
+                variant='contained'
+                color='secondary'
+                fullWidth sx={{ height: '99%' }}
+                disabled={loading}
+                startIcon={loading ? <CircularProgress size={18} /> : <SearchIcon />}
+                type="submit">
+                Pesquisar
+              </Button>
             </Grid>
           </Grid>
         </Box>

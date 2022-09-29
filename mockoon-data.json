@@ -71,7 +71,7 @@
         {
           "uuid": "aa70cf1b-b6e2-47fb-a3c4-ce3939e943f6",
           "body": "{\n  \"message\": \"User or password is invalid\"\n}",
-          "latency": 0,
+          "latency": 3000,
           "statusCode": 401,
           "label": "",
           "headers": [],
@@ -126,7 +126,7 @@
         {
           "uuid": "57d3e004-c05a-4eb2-b28d-6aa5f534cb69",
           "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}\",\n    \"email\": \"{{ faker 'internet.email' }}\"\n  },\n  \"token\": \"{{ faker 'datatype.uuid' }}\"\n}",
-          "latency": 5000,
+          "latency": 1000,
           "statusCode": 200,
           "label": "",
           "headers": [],
