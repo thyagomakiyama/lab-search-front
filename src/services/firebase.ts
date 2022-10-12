@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { initializeApp } from 'firebase/app'
 // import { getAnalytics } from 'firebase/analytics'
 import { getAuth } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,5 +15,7 @@ const firebaseConfig = {
 }
 
 export const firebaseApp = initializeApp(firebaseConfig)
-export const firebaseAuth = getAuth(firebaseApp)
+export const firebaseAuth = getAuth()
+export const firebaseDB = getFirestore()
+
 // const analytics = getAnalytics(firebase)

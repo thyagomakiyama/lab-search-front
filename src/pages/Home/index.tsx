@@ -1,29 +1,49 @@
 import { Alert, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Container } from '@mui/system'
-import { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
 import NavBar from '../../components/NavBar'
 import Item from '../../types/Item'
 import { AxiosError } from 'axios'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GRID_PORTUGUES_TRANSLATOR } from '../../translators/GridPortugueseTranslator'
 import ExpandableCell from '../../components/ExpandableCell'
-import { useApi } from '../../hooks/useApi'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { itemRepository } from '../../repositories/ItemRepository'
+import Brand from '../../types/Brand'
 
 const Home = (): JSX.Element => {
   const auth = useContext(AuthContext)
   const navigate = useNavigate()
-  const api = useApi()
+  const itemAPI = itemRepository()
   const [searchForm, setSearchForm] = useState({
-    search: '',
+    name: '',
     brand: ''
   })
   const [items, setItems] = useState<Item[]>([])
   const [error, setError] = useState('')
   const [openErrorAlert, setOpenErrorAlert] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [brands, setBrands] = useState<Brand[]>([])
+
+  useEffect(() => {
+    setLoading(true)
+    const fetchBrands = async (): Promise<void> => {
+      await itemAPI.getBrands()
+        .then(response => {
+          setBrands(response)
+        })
+        .catch((error: Error | AxiosError) => {
+          setError(error.message)
+          setOpenErrorAlert(true)
+          setBrands([])
+        })
+    }
+
+    fetchBrands()
+    setLoading(false)
+  }, [])
 
   const handleSelectBrand = (event: SelectChangeEvent): void => {
     setSearchForm({
@@ -32,10 +52,10 @@ const Home = (): JSX.Element => {
     })
   }
 
-  const handleSearchField = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleNameField = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchForm({
       ...searchForm,
-      search: event.target.value
+      name: event.target.value
     })
   }
 
@@ -52,13 +72,20 @@ const Home = (): JSX.Element => {
     event.preventDefault()
     setLoading(true)
 
-    await api.getItems(searchForm.brand, searchForm.search)
+    await itemAPI.getItems(searchForm.brand, searchForm.name)
       .then(response => {
-        setItems(response)
-        setError('')
-        setOpenErrorAlert(false)
+        if (response.length === 0) {
+          setError('Zero item encontrados com estes filtros.')
+          setOpenErrorAlert(true)
+          setItems([])
+        } else {
+          setItems(response)
+          setError('')
+          setOpenErrorAlert(false)
+        }
       })
       .catch((error: Error | AxiosError) => {
+        console.error(error)
         setError(error.message)
         setOpenErrorAlert(true)
         setItems([])
@@ -81,16 +108,14 @@ const Home = (): JSX.Element => {
         <Box component="form" noValidate onSubmit={handleSubmit}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={8} md={7}>
-              <TextField label="Buscar" variant="outlined" fullWidth value={searchForm.search} onChange={handleSearchField} />
+              <TextField label="Nome do produto" variant="outlined" fullWidth value={searchForm.name} onChange={handleNameField} />
             </Grid>
             <Grid item xs={12} sm={4} md={3}>
               <FormControl fullWidth>
                 <InputLabel id="brand-label">Marca</InputLabel>
                 <Select labelId="brand-label" value={searchForm.brand} label="Marca" onChange={handleSelectBrand}>
                   <MenuItem value={''}><em>Marca</em></MenuItem>
-                  <MenuItem value={'CANADIAN_SOLAR'}>Canadian Solar</MenuItem>
-                  <MenuItem value={'FIRST_SOLAR'}>First Solar</MenuItem>
-                  <MenuItem value={'RENESOLA'}>Renesola</MenuItem>
+                  {brands.map((brand, key) => { return <MenuItem key={key} value={brand.name}>{brand.name}</MenuItem> })}
                 </Select>
               </FormControl>
             </Grid>
@@ -116,7 +141,6 @@ const Home = (): JSX.Element => {
             rowsPerPageOptions={[5, 10, 15]}
             localeText={GRID_PORTUGUES_TRANSLATOR}
             getRowHeight={() => 'auto'}
-            // getEstimatedRowHeight={() => 50}
             rowHeight={70}
             sx={{
               '& .MuiDataGrid-row:hover': {
