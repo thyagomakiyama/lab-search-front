@@ -12,6 +12,7 @@ import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { itemRepository } from '../../repositories/ItemRepository'
 import Brand from '../../types/Brand'
+import { stringCapitalize } from '../../utils/utils'
 
 const Home = (): JSX.Element => {
   const auth = useContext(AuthContext)
@@ -62,7 +63,7 @@ const Home = (): JSX.Element => {
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', width: 150 },
     { field: 'description', headerName: 'Descrição', width: 400, renderCell: (params: GridRenderCellParams) => <ExpandableCell {...params} /> },
-    { field: 'price', headerName: 'Preço', width: 90 },
+    { field: 'price', headerName: 'Preço', width: 150 },
     { field: 'brand', headerName: 'Marca', width: 150 },
     { field: 'model', headerName: 'Modelo', width: 150 },
     { field: 'store', headerName: 'Loja', width: 150 }
@@ -115,7 +116,7 @@ const Home = (): JSX.Element => {
                 <InputLabel id="brand-label">Marca</InputLabel>
                 <Select labelId="brand-label" value={searchForm.brand} label="Marca" onChange={handleSelectBrand}>
                   <MenuItem value={''}><em>Marca</em></MenuItem>
-                  {brands.map((brand, key) => { return <MenuItem key={key} value={brand.name}>{brand.name}</MenuItem> })}
+                  {brands.map((brand, key) => { return <MenuItem key={key} value={brand.name}>{stringCapitalize(brand.name)}</MenuItem> })}
                 </Select>
               </FormControl>
             </Grid>

@@ -3,8 +3,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { AxiosError } from 'axios'
-import ResponseError from '../../types/ResponseError'
+import { firebaseErrorLogin } from '../../services/firebaseAuth'
 
 const Login = (): JSX.Element => {
   const auth = useContext(AuthContext)
@@ -23,17 +22,17 @@ const Login = (): JSX.Element => {
       .then(() => {
         setOpenErrorAlert(false)
         navigate('/')
-      }).catch((error: AxiosError<ResponseError>) => {
-        console.log(error)
-        handleErrorLogin(error.response?.data.message ?? 'Error to request login')
       }).catch((error: Error) => {
-        handleErrorLogin(error.message)
+        handleErrorLogin(error.message ?? 'Error to request login')
       })
 
     setLoading(false)
   }
 
   const handleErrorLogin = (errorMessage: string): void => {
+    if (errorMessage === firebaseErrorLogin) {
+      errorMessage = 'User or Password is invalid'
+    }
     setPassword('')
     setOpenErrorAlert(true)
     setLoginError(errorMessage)

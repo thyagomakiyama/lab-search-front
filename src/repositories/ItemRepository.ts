@@ -1,3 +1,4 @@
+import { stringCapitalize, capitalize, centsToReal } from './../utils/utils'
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { query, getDocs } from 'firebase/firestore'
 import { brandsCollection, filter, itemsCollection } from '../services/firestore'
@@ -24,12 +25,12 @@ export const itemRepository = () => ({
     const data = await getDocs(stmt)
     data.forEach((doc) => items.push({
       id: doc.id,
-      name: doc.data().name,
-      description: doc.data().description,
-      price: doc.data().price,
-      brand: doc.data().brand,
-      model: doc.data().model,
-      store: doc.data().store
+      name: stringCapitalize(doc.data().name),
+      description: capitalize(doc.data().description),
+      price: centsToReal(doc.data().price),
+      brand: stringCapitalize(doc.data().brand),
+      model: doc.data().model.toUpperCase(),
+      store: stringCapitalize(doc.data().store)
     }))
     return items
   },
