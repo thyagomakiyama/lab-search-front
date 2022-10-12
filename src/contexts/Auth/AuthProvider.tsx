@@ -1,49 +1,52 @@
 import { useEffect, useState } from 'react'
-import { useApi } from '../../hooks/useApi'
 import User from '../../types/User'
 import { AuthContext } from './AuthContext'
 import { AUTH } from './Constants'
+import { firebaseAuth } from '../../services/firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export const AuthProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH.LOCAL_STORAGE_TOKEN_KEY))
-  const api = useApi()
 
   useEffect(() => {
-    validateToken()
+    firebaseAuth.onAuthStateChanged(firebaseUser => {
+      if (firebaseUser !== null) {
+        setUser({
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: firebaseUser.displayName
+        })
+      } else {
+        removeToken()
+        setUser(null)
+      }
+    })
   }, [])
 
-  const validateToken = async (): Promise<void> => {
-    const storageDataAuthToken = localStorage.getItem(AUTH.LOCAL_STORAGE_TOKEN_KEY)
-    if (storageDataAuthToken !== null) {
-      await api.validateToken(storageDataAuthToken)
-        .then(response => {
-          if (response.user !== null) {
-            setUser(response.user)
-          }
-        })
-        .catch(() => removeToken())
-    }
-  }
-
   const signin = async (email: string, password: string): Promise<boolean> => {
-    const data = await api.signin(email, password)
+    const data = await signInWithEmailAndPassword(firebaseAuth, email, password)
 
-    if (data.user !== null && data.token !== null) {
-      setUser(data.user)
-      handleToken(data.token)
-      return true
+    if (data.user !== null) {
+      const token = data.user.getIdToken()
+      token.then(tk => {
+        handleToken(tk)
+        setUser({
+          id: data.user.uid,
+          email: data.user.email,
+          name: data.user.displayName
+        })
+        return true
+      })
     }
 
     return false
   }
 
-  const logout = async (token: string): Promise<void> => {
+  const logout = async (): Promise<void> => {
     removeToken()
     setUser(null)
-    if (token === '') {
-      await api.logout(token)
-    }
+    await firebaseAuth.signOut()
   }
 
   const handleToken = (token: string): void => {

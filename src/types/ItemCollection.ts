@@ -1,11 +1,10 @@
-interface Item {
-  id: string
+interface ItemCollection {
   name: string
   description: string
-  price: string
+  price: number
   brand: string
   model: string
   store: string
 }
 
-export default Item
+export default ItemCollection
