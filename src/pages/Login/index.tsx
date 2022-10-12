@@ -24,6 +24,7 @@ const Login = (): JSX.Element => {
         setOpenErrorAlert(false)
         navigate('/')
       }).catch((error: AxiosError<ResponseError>) => {
+        console.log(error)
         handleErrorLogin(error.response?.data.message ?? 'Error to request login')
       }).catch((error: Error) => {
         handleErrorLogin(error.message)
